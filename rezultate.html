@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cuprarea</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Georgia, serif;
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    h1,
+    h2 {
+      text-align: center;
+      width: 100%;
+      margin: 0;
+      color: rgb(3, 3, 3);
+      font-size: 2.4em;
+      margin-top: 30px;
+    }
+
+    .pagina {
+      padding: 20px;
+      gap: 100px;
+      display: flex;
+      flex: 1;
+    }
+
+    .panouri {
+      width: 500px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .spatii {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .date-intrare,
+    .rezultate,
+    .links {
+      background-color: rgba(0, 0, 0, 0.6);
+      width: 100%;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .parametru {
+      margin-bottom: 15px;
+    }
+
+    label {
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    input[type="range"],
+    input[type="number"] {
+      width: 100%;
+      border: none;
+      padding: 5px;
+      border-radius: 5px;
+    }
+
+    #afisaj-curent {
+      display: inline-block;
+      margin-left: 10px;
+      font-weight: bold;
+    }
+
+    button {
+      background-color: #1083f6;
+      color: white;
+      transition: background-color 0.2s;
+      padding: 10px 15px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1c86ee;
+    }
+
+    .rezultate h3 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+
+    .rezultat {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .grosime {
+      background: #d14804;
+      margin-top: 20px;
+      height: 30px;
+      position: relative;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .metal-inceput {
+      background: #9c846e;
+      height: 100%;
+    }
+
+    .barajDepunere {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, transparent, #1e90ff);
+      transition: width 0.5s ease-out;
+    }
+
+    .animation-container {
+      flex: 1;
+      height: 520px;
+      width: 700px;
+      position: relative;
+      background-color: rgba(10, 104, 158, 0.51);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 3px solid rgba(6, 6, 6, 0.5);
+      box-shadow: 0 0 40px rgba(20, 57, 81, 0.5);
+    }
+
+    .anod,
+    .catod {
+      background-color: #888;
+      position: absolute;
+      height: 90%;
+      width: 75px;
+      bottom: 15%;
+    }
+
+    .anod {
+      left: 50px;
+      background: linear-gradient(to right, #f9d51e, #ecd123);
+    }
+
+    .catod {
+      right: 50px;
+      background: linear-gradient(to right, #d31d1d, #f51b1b);
+    }
+
+    .stratCatodVizual {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, transparent, #f3c303);
+      position: absolute;
+      top: 0;
+      right: 0;
+      transition: width 0.5s linear;
+    }
+
+    .ion {
+      width: 30px;
+      height: 30px;
+      font-size: 14px;
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .cupru-ion {
+      box-shadow: 0 0 15px #FFD700;
+      background-color: rgba(238, 204, 11, 0.7);
+      color: #000;
+    }
+
+    .sulf-ion {
+      background-color: rgba(232, 13, 9, 0.7);
+      box-shadow: 0 0 15px #ea4242;
+      color: #000;
+    }
+
+    .fir {
+      background-color: #555;
+      position: absolute;
+      height: 6px;
+      top: 5%;
+      left: 70px;
+      right: 70px;
+    }
+
+    .fir::before,
+    .fir::after {
+      content: '';
+      position: absolute;
+      width: 5px;
+      background-color: #555;
+    }
+
+    .fir::before {
+      bottom: 100%;
+      top: -30px;
+      left: 0;
+    }
+
+    .fir::after {
+      top: -30px;
+      bottom: 100%;
+      right: 0;
+    }
+
+    .electron {
+      background-color: #FF5555;
+      box-shadow: 0 0 10px #FF0000;
+      width: 15px;
+      height: 15px;
+      position: absolute;
+      border-radius: 60%;
+      top: -3px;
+      left: 0;
+      opacity: 0;
+    }
+
+    .animation-running .cupru-ion {
+      animation: spreCatod 5s linear forwards;
+    }
+
+    .animation-running .sulf-ion {
+      animation: spreAnod 5s linear forwards;
+    }
+
+    .animation-running .electron {
+      animation: miscareElectron 2.5s linear infinite;
+    }
+
+    @keyframes spreCatod {
+      0% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(calc(100% - 250px));
+        opacity: 0;
+      }
+    }
+
+    .animation-running .cupru-ion {
+      animation: spreCatod 4s linear forwards;
+    }
+
+    @keyframes miscareDreapta {
+      0% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(200px);
+        opacity: 0;
+      }
+    }
+
+    .animation-running .cupru-ion {
+      animation: miscareDreapta 3s linear forwards;
+    }
+
+    @keyframes spreAnod {
+      0% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(calc(-100% + 140px));
+        opacity: 0;
+      }
+    }
+
+    @keyframes miscareElectron {
+      0% {
+        left: 0;
+        opacity: 1;
+      }
+
+      100% {
+        left: 100%;
+        opacity: 1;
+      }
+    }
+
+    .bubble {
+      background-color: rgba(255, 255, 255, 0.741);
+      position: absolute;
+      border-radius: 60%;
+      animation: plutire 5s infinite;
+    }
+
+    @keyframes plutire {
+      0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 0.5;
+      }
+
+      100% {
+        transform: translateY(-300px) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    .plating {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: #ecca08;
+      border-radius: 50%;
+      opacity: 0;
+      right: 50px;
+    }
+
+    .animation-running .plating {
+      animation: placareCatod 1s forwards;
+    }
+
+    @keyframes placareCatod {
+      0% {
+        transform: translate(0, 0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(-5px, 0);
+        opacity: 0;
+      }
+    }
+
+    .link {
+      display: block;
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #2b7dee;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .link:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Depuneri catodice de metale</h1>
+  <h2>Cuprarea</h2>
+  <div class="pagina">
+    <div class="panouri">
+      <div class="spatii">
+        <div class="date-intrare">
+          <div class="parametru">
+            <label for="curent">Intensitate curent (A):</label>
+            <input id="curent" max="2" min="0.1" step="0.1" type="range" value="0.3" />
+            <span id="afisaj-curent">0.3</span>
+          </div>
+          <div class="parametru">
+            <label for="time">Durata proces (min):</label>
+            <input id="time" max="60" min="1" type="number" value="30" />
+          </div>
+          <div class="parametru">
+            <label for="surface">Suprafață catod (cm²):</label>
+            <input id="surface" min="1" type="number" value="20" />
+          </div>
+          <button id="btnStartProces">Pornire electroliză</button>
+          <button id="butonResetTotal">Resetare valori</button>
+        </div>
+        <div class="rezultate">
+          <h3>Rezultate electroliză</h3>
+          <div class="rezultat">
+            <span>Masă teoretică:</span>
+            <span id="theoretical-mass">0 g</span>
+          </div>
+          <div class="rezultat">
+            <span>Masă depusă:</span>
+            <span id="actual-mass">0 g</span>
+          </div>
+          <div class="rezultat">
+            <span>Randament curent:</span>
+            <span id="efficiency">0%</span>
+          </div>
+          <div class="rezultat">
+            <span>Grosime strat:</span>
+            <span id="thickness">0 µm</span>
+          </div>
+          <div class="grosime">
+            <div class="metal-inceput"></div>
+            <div class="barajDepunere" id="barajDepunere"></div>
+          </div>
+        </div>
+        <div class="links">
+          <h3>Documentație și simularea lucrării</h3>
+          <a href="copie.html" class="link" target="_blank">Simulare</a>
+          <a href="7. Depuneri catodice de metale. Cuprarea.pdf" class="link" target="_blank">Documentație</a>
+        </div>
+      </div>
+    </div>
+    <div class="animation-container" id="animation-container">
+      <div class="anod"></div>
+      <div class="catod">
+        <div class="stratCatodVizual" id="stratCatodVizual"></div>
+      </div>
+      <div class="fir">
+        <div class="electron" id="electron"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let bubbleInterval, platingInterval; // pentru animații
+    const platingCatod = document.getElementById('stratCatodVizual'); // catodul vizual
+    let ionInterval, sulfateInterval; // mai multe variabile pentru intervale
+    // generează bule random în lichid
+    function buleElectrolit() {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      // poziție aleatoare
+      const leftPos = 120 + Math.random() * (zonaAnim.offsetWidth - 170);
+      const size = 5 + Math.random() * 15; // dimensiune aleatoare
+      bubble.style.left = `${leftPos}px`;
+      bubble.style.bottom = '0';
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.animationDuration = `${3 + Math.random() * 7}s`;
+      zonaAnim.appendChild(bubble);
+      // șterge bula după ce dispare
+      setTimeout(() => bubble.remove(), 10000);
+    }
+    //functie de oprire a animatiilor
+    function opresteTot() {
+      zonaAnim.classList.remove('animation-running');
+      clearInterval(animationInterval);
+      clearInterval(bubbleInterval);
+      clearInterval(ionInterval);
+      clearInterval(sulfateInterval);
+      clearInterval(platingInterval);
+      actualizareStratVizual(0);
+      document.querySelectorAll('.cupru-ion, .bubble, .plating').forEach(el => el.remove());
+      document.getElementById('electron').style.opacity = '0';
+    }
+
+    //pornirea animației
+    document.getElementById('btnStartProces').addEventListener('click', () => {
+      const I = parseFloat(document.getElementById('curent').value);
+      pornesteAnimatia(I); // apelează funcția principală
+    });
+    const afisajCurent = document.getElementById('afisaj-curent');
+    const zonaAnim = document.getElementById('animation-container');
+    let animationInterval; // intervalul principal
+    const stratulFinal = document.getElementById('barajDepunere');
+    // Resetare la valori default
+    document.getElementById('butonResetTotal').addEventListener('click', () => {
+      document.getElementById('theoretical-mass').textContent = "0 g";
+      document.getElementById('actual-mass').textContent = "0 g";
+      document.getElementById('efficiency').textContent = "0%";
+      document.getElementById('thickness').textContent = "0 µm";
+      // valori inițiale
+      document.getElementById('curent').value = 0.3;
+      afisajCurent.textContent = "0.3";
+      document.getElementById('time').value = 30;
+      document.getElementById('surface').value = 20;
+      opresteTot(); // oprește animațiile
+    });
+    // funcția care face depunerea vizuală
+    function efectDepunere() {
+      const particle = document.createElement('div');
+      particle.className = 'plating';
+      // particulă random 
+      particle.style.top = `${100 + Math.random() * (zonaAnim.offsetHeight - 200)}px`;
+      zonaAnim.appendChild(particle);
+      // dispare după 1 secundă
+      setTimeout(() => particle.remove(), 1000);
+    }
+    // functie ce actualizează grosimea stratului vizual
+    function actualizareStratVizual(thickness_um) {
+      const widthPercent = Math.min(thickness_um / 2, 100); // nu depășește 100%
+      stratulFinal.style.width = `${widthPercent}%`;
+      platingCatod.style.width = `${widthPercent}%`;
+    }
+    const sliderCurent = document.getElementById('curent');
+    sliderCurent.addEventListener('input', function () {
+      afisajCurent.textContent = this.value; // afișează valoarea curentă
+    });
+    //functie ce generează ioni de cupru
+    function genereazaCu2() {
+      const ion = document.createElement('div');
+      ion.className = 'ion cupru-ion';
+      ion.textContent = 'Cu²⁺';
+      ion.style.top = `${100 + Math.random() * (zonaAnim.offsetHeight - 200)}px`;
+      ion.style.left = '125px'; // Apare pe partea dreaptă a anodului (~50px + 75px lățime anod)
+      zonaAnim.appendChild(ion);
+      setTimeout(() => ion.remove(), 4000);
+    }
+    // funcție ce generează ioni de cupru care merg spre dreapta
+    function genCu2Right() {
+      const ion = document.createElement('div');
+      ion.className = 'ion cupru-ion';
+      ion.textContent = 'Cu²⁺';
+      ion.style.top = `${100 + Math.random() * (zonaAnim.offsetHeight - 200)}px`;
+      ion.style.left = `${zonaAnim.offsetWidth - 70}px`; // partea dreaptă
+      zonaAnim.appendChild(ion);
+      setTimeout(() => ion.remove(), 5000);
+    }
+    // Ioni de la anod (dreapta anodului spre dreapta)
+    function genereazaCu2Anod() {
+      const ion = document.createElement('div');
+      ion.className = 'ion cupru-ion';
+      ion.textContent = 'Cu²⁺';
+      ion.style.top = `${100 + Math.random() * (zonaAnim.offsetHeight - 200)}px`;
+      ion.style.left = '125px'; // Apare pe partea dreaptă a anodului (50px + 75px)
+      zonaAnim.appendChild(ion);
+      setTimeout(() => ion.remove(), 4000);
+    }
+
+    // Ioni de la catod (stânga catodului spre dreapta)
+    function genereazaCu2Catod() {
+      const ion = document.createElement('div');
+      ion.className = 'ion cupru-ion';
+      ion.textContent = 'Cu²⁺';
+      ion.style.top = `${100 + Math.random() * (zonaAnim.offsetHeight - 200)}px`;
+      ion.style.left = `${zonaAnim.offsetWidth - 125}px`; // Apare pe partea stângă a catodului
+      zonaAnim.appendChild(ion);
+      setTimeout(() => ion.remove(), 4000);
+    }
+    // funcția principală 
+    function pornesteAnimatia(curent) {
+      opresteTot();
+      zonaAnim.classList.add('animation-running');
+
+      // Ioni de la anod (dreapta anodului spre dreapta)
+      ionInterval = setInterval(genereazaCu2Anod, 1000 / (curent * 5));
+
+      // Ioni de la catod (stânga catodului spre dreapta)
+      sulfateInterval = setInterval(genereazaCu2Catod, 1500 / (curent * 5));
+
+      platingInterval = setInterval(efectDepunere, 500 / curent);
+      bubbleInterval = setInterval(buleElectrolit, 300);
+
+      document.getElementById('electron').style.animationDuration = `${2 / curent}s`;
+      document.getElementById('electron').style.opacity = '1';
+
+      document.getElementById('electron').style.animationDuration = `${2 / curent}s`;
+      document.getElementById('electron').style.opacity = '1';
+      // calculează rezultatele
+      const t = parseFloat(document.getElementById('time').value);
+      const A = parseFloat(document.getElementById('surface').value);
+      const M = 63.546; // masa atomică Cu
+      const n = 2; // electroni
+      const F = 96500; // constanta Faraday
+      const rho = 8.96; // densitatea cuprului
+      const efficiency = 90; // randament 90%
+      //calcule
+      const m_theoretical = (M * curent * t * 60) / (n * F);
+      const m_actual = m_theoretical * (efficiency / 100);
+      const thickness_cm = m_actual / (rho * A);
+      const finalThickness_um = thickness_cm * 10000; // convertim în micrometri 
+      // afișare rezultate
+      document.getElementById('theoretical-mass').textContent = m_theoretical.toFixed(3) + " g";
+      document.getElementById('actual-mass').textContent = m_actual.toFixed(3) + " g";
+      document.getElementById('efficiency').textContent = efficiency + "%";
+      document.getElementById('thickness').textContent = finalThickness_um.toFixed(1) + " µm";
+      // animație grosime strat
+      const animationDuration = 2000 + (1000 / curent);
+      const startTime = Date.now();
+      function animatePlating() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / animationDuration, 1);
+        actualizareStratVizual(finalThickness_um * progress);
+
+        if (progress < 1) {
+          requestAnimationFrame(animatePlating);
+        }
+      }
+      animatePlating();
+    }
+    // Adaugă bule la început
+    for (let i = 0; i < 10; i++) {
+      setTimeout(buleElectrolit, i * 300); // întârziere progresivă
+    }
+  </script>
+</body>
+
+</html>
