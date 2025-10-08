@@ -123,5 +123,4 @@ This application is intended for **chemistry laboratories, high schools, and uni
 
 ---
 
-## 📁 Project Structure
 
