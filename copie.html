@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="styles2.css" />
+  <title>Configurare echipamente</title>
+</head>
+<style>
+  body {
+    margin: 0;
+    font-family: Georgia;
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #fff;
+    min-height: 100vh;
+  }
+
+  img {
+    position: absolute;
+    right: 0%;
+    top: 52.5%;
+    max-height: 15%;
+    max-width: 15%;
+  }
+
+  ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 1em;
+  }
+
+  .task {
+    padding-left: 2em;
+    text-indent: -2em;
+  }
+
+  .task::before {
+    content: "âŒ  ";
+    padding-right: 1px;
+  }
+
+  .done::before {
+    content: "âœ”ï¸  ";
+    padding-right: 1px;
+  }
+
+  h3 {
+    text-align: center;
+  }
+
+  .instruction-pane {
+    position: absolute;
+    width: 48%;
+    top: 0.25%;
+    left: 0.25%;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .equipment-container {
+    height: 50%;
+    width: 48%;
+    top: 49%;
+    left: 0.25%;
+    position: absolute;
+    background-color: rgba(95, 244, 140, 0.5);
+    border-radius: 20px;
+    border: 3px solid rgba(6, 6, 6, 0.5);
+    box-shadow: 0 0 40px rgba(20, 57, 81, 0.5);
+  }
+
+  #hint {
+    height: 50%;
+    width: 48%;
+    top: 49%;
+    right: 0;
+    position: absolute;
+  }
+
+  #hint>.anode,
+  #hint>.cathode,
+  #hint>.battery,
+  #tray,
+  #left-wire,
+  #right-wire {
+    top: 25%;
+    opacity: 0;
+  }
+
+  #hint>.anode {
+    left: 15%
+  }
+
+  #hint>.cathode {
+    left: 65%;
+  }
+
+  #hint>.battery {
+    left: 40%;
+  }
+
+  #tray {
+    position: absolute;
+    height: 1.25%;
+    width: 16%;
+    top: 47%;
+    left: 37%;
+    background-color: #333;
+  }
+
+  #left-wire {
+    top: 28%;
+    left: 21%;
+  }
+
+  #right-wire {
+    top: 28%;
+    left: 49%;
+  }
+
+  .water-tank {
+    height: 25%;
+    width: 46%;
+    top: 74%;
+    right: 0.25%;
+    position: absolute;
+    background-color: rgba(196, 255, 250, 0.5);
+    border-radius: 0px 0px 20px 20px;
+    border-left: 3px solid rgba(6, 6, 6, 0.5);
+    border-right: 3px solid rgba(6, 6, 6, 0.5);
+    border-bottom: 3px solid rgba(6, 6, 6, 0.5);
+    box-shadow: 0 0 40px rgba(20, 57, 81, 0.5);
+    overflow: hidden;
+  }
+
+  .anode {
+    position: absolute;
+    height: 50%;
+    width: 7%;
+    background: linear-gradient(to right, #f9d51e, #ecd123);
+    bottom: 10%;
+    border-radius: 10px;
+  }
+
+  .cathode {
+    position: absolute;
+    height: 50%;
+    width: 7%;
+    background: linear-gradient(to right, #d31d1d, #f51b1b);
+    bottom: 10%;
+    border-radius: 10px;
+  }
+
+  .external-wire {
+    position: absolute;
+    width: 20%;
+    height: 4px;
+    background-color: #555;
+  }
+
+  .battery {
+    position: absolute;
+    width: 10%;
+    height: 20%;
+    user-select: none;
+  }
+
+  .upper-half {
+    height: 37.5%;
+    width: 100%;
+    background: linear-gradient(to right, #ffa621, #ffa220);
+    border-bottom: solid #000;
+  }
+
+  .lower-half {
+    height: 70%;
+    width: 100%;
+    background-color: rgb(4, 83, 107);
+  }
+
+  #plus {
+    position: absolute;
+    float: left;
+    left: 10%;
+  }
+
+  #minus {
+    position: absolute;
+    float: right;
+    right: 12%;
+  }
+
+  #wt {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background-color: rgba(15, 112, 104, 0.5);
+    transition: height 0.03s linear;
+  }
+</style>
+
+<body>
+  <div class="instruction-pane">
+    <h3>Instrucțiuni</h3>
+    <ul>
+      <li class="task" id="task1">Umpleți recipientul din dreapta cu soluție de CuSO<sub>4</sub> ținând apăsat pe
+        robinet</li>
+      <li class="task" id="task2">Plasați anodul, catodul și bateria în spațiul de lucru</li>
+      <li class="task" id="task3">Conectați sistemul folosind cele două fire conductoare</li>
+    </ul>
+  </div>
+  <div class="equipment-container" id="eq">
+    <div class="anode"></div>
+    <div class="cathode"></div>
+    <div class="external-wire"></div>
+    <div class="external-wire"></div>
+    <div class="battery">
+      <div class="upper-half"><span id="plus">+</span><span id="minus">-</span></div>
+      <div class="lower-half"></div>
+    </div>
+  </div>
+  <div class="water-tank">
+    <div id="wt"></div>
+  </div>
+  <div id="hint">
+    <div class="anode"></div>
+    <div class="cathode"></div>
+    <div class="battery">
+      <div class="upper-half"><span id="plus">+</span><span id="minus">-</span></div>
+      <div class="lower-half"></div>
+    </div>
+    <div class="external-wire" id="left-wire"></div>
+    <div class="external-wire" id="right-wire"></div>
+    <div id="tray"></div>
+  </div>
+  <img src="faucet.png" id="faucet" draggable="false" />
+</body>
+<script>
+  let eq = document.getElementById('eq');
+  let btn = document.getElementById('faucet');
+  let fill = document.getElementById('wt');
+  let t1 = document.getElementById('task1');
+  let hint = document.getElementById('hint');
+  let tray = document.getElementById('tray');
+  let wires = document.getElementsByClassName('external-wire');
+
+  let divs1 = eq.children;
+  let divs2 = hint.children;
+
+  let W = eq.clientWidth;
+  let H = eq.clientHeight;
+
+  let interval = null;
+  let fillPerc = 0;
+
+  for (var i = 0; i < divs1.length; i++) {
+    divs1[i].style.top = Math.random() * (H - divs1[i].clientHeight) + "px";
+    divs1[i].style.left = Math.random() * (W - divs1[i].clientWidth) + "px";
+  }
+
+  function isTouching(drag, target) {
+    let dragRect = drag.getBoundingClientRect();
+    let targetRect = target.getBoundingClientRect();
+
+    return !(dragRect.right < targetRect.left ||
+      dragRect.left > targetRect.right ||
+      dragRect.top > targetRect.bottom ||
+      dragRect.bottom < targetRect.top);
+  }
+
+  function startFill() {
+    if (interval) return;
+    if (fillPerc == 90) return;
+    interval = setInterval(() => {
+      if (fillPerc <= 90) {
+        fillPerc++;
+        fill.style.height = fillPerc + '%';
+      }
+      if (fillPerc == 90) {
+        t1.classList.add("done");
+        initTask2();
+      }
+    }, 20);
+  }
+
+  function stopFill() {
+    clearInterval(interval);
+    interval = null;
+  }
+
+  function initTask2() {
+    let t2 = document.getElementById("task2");
+
+    for (var i = 0; i < divs1.length; i++) {
+      if (!divs1[i].classList.contains('external-wire')) {
+        divs1[i].setAttribute('draggable', 'true');
+      }
+    }
+
+    for (var i = 0; i < divs2.length; i++) {
+      if (!divs2[i].classList.contains('external-wire')) {
+        divs2[i].style.opacity = 0.3;
+      }
+    }
+    tray.style.opacity = 1;
+
+    let draggableItems = document.querySelectorAll('[draggable="true"]');
+
+    draggableItems.forEach((elem) => {
+      let target = document.getElementsByClassName(elem.classList.item(0))[1];
+      let isDragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      elem.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        isDragging = true;
+        offsetX = e.clientX - elem.offsetLeft;
+        offsetY = e.clientY - elem.offsetTop;
+      });
+      elem.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setDragImage(new Image(), 0, 0);
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (isDragging) {
+          elem.style.left = `${e.clientX - offsetX}px`;
+          elem.style.top = `${e.clientY - offsetY}px`;
+          if (isTouching(elem, target)) {
+            elem.setAttribute('draggable', 'false');
+            elem.style.opacity = 0;
+            target.style.opacity = 1;
+          }
+          if (document.querySelectorAll('[draggable="true"]').length == 0) {
+            t2.classList.add("done");
+            initTask3();
+          }
+        }
+      });
+      document.addEventListener("mouseup", () => {
+        isDragging = false;
+      });
+    });
+  }
+
+  function initTask3() {
+    let t3 = document.getElementById("task3");
+
+    for (var i = 0; i < wires.length; i++) {
+      if (eq.contains(wires[i])) {
+        wires[i].setAttribute('draggable', 'true');
+      } else {
+        wires[i].style.opacity = 0.3;
+      }
+    }
+
+    let draggableItems = document.querySelectorAll('[draggable="true"]');
+    let transparentWires = hint.querySelectorAll(':scope > .external-wire');
+
+    draggableItems.forEach((elem) => {
+      let isDragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      elem.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        isDragging = true;
+        offsetX = e.clientX - elem.offsetLeft;
+        offsetY = e.clientY - elem.offsetTop;
+      });
+      elem.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setDragImage(new Image(), 0, 0);
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (isDragging) {
+          elem.style.left = `${e.clientX - offsetX}px`;
+          elem.style.top = `${e.clientY - offsetY}px`;
+          transparentWires.forEach((target) => {
+            if (!target.classList.contains("placed")) {
+              if (isTouching(elem, target)) {
+                elem.setAttribute('draggable', 'false');
+                elem.style.opacity = 0;
+                target.classList.add("placed");
+                target.style.opacity = 1;
+              }
+            }
+          });
+          if (document.querySelectorAll('[draggable="true"]').length == 0) {
+            t3.classList.add("done");
+          }
+        }
+      });
+      document.addEventListener("mouseup", () => {
+        isDragging = false;
+      });
+    });
+  }
+
+  btn.addEventListener('mousedown', startFill);
+  btn.addEventListener('mouseleave', stopFill);
+  document.addEventListener('mouseup', stopFill);
+</script>
+
+</html>
